@@ -19,6 +19,8 @@ public class User implements UserDetails {
     @Indexed(unique = true)
     private String username;
 
+    private String email;
+
     private String password;
 
     private String role = "ROLE_USER";
@@ -26,13 +28,15 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String username, String password) {
+    public User(String username, String email, String password) {
         this.username = username;
+        this.email = email;
         this.password = password;
     }
 
-    public User(String username, String password, String role) {
+    public User(String username, String email, String password, String role) {
         this.username = username;
+        this.email = email;
         this.password = password;
         this.role = role;
     }
@@ -52,6 +56,14 @@ public class User implements UserDetails {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override

@@ -31,7 +31,7 @@ public class AuthService implements UserDetailsService {
             throw new IllegalArgumentException("Username is already taken");
         }
 
-        User user = new User(request.getUsername(), passwordEncoder.encode(request.getPassword()));
+        User user = new User(request.getUsername(), request.getEmail(), passwordEncoder.encode(request.getPassword()));
         User savedUser = userRepository.save(user);
         String token = jwtUtil.generateToken(savedUser);
 
