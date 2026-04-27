@@ -27,32 +27,52 @@ public class AuthService implements UserDetailsService {
     }
 
     public AuthResponse register(AuthRequest request) {
-        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+        String username = request.getUsername() == null ? "" : request.getUsername().trim();
+        if (username.isBlank()) {
+            throw new IllegalArgumentException("Username is required");
+        }
+        if (username.length() < 3 || username.length() > 50) {
+            throw new IllegalArgumentException("Username must be between 3 and 50 characters");
+        }
+        if (userRepository.findByUsername(username).isPresent()) {
             throw new IllegalArgumentException("Username is already taken");
         }
+        if (userRepository.findByEmail(request.getEmail().trim()).isPresent()) {
+            throw new IllegalArgumentException("Email is already registered");
+        }
 
-        User user = new User(request.getUsername(), request.getEmail(), passwordEncoder.encode(request.getPassword()));
+        User user = new User(username, request.getEmail().trim(), passwordEncoder.encode(request.getPassword()));
         User savedUser = userRepository.save(user);
         String token = jwtUtil.generateToken(savedUser);
 
-        return new AuthResponse("User registered successfully", savedUser.getUsername(), token);
+        return new AuthResponse(
+                "User registered successfully",
+                savedUser.getProfileUsername(),
+                savedUser.getEmail(),
+                token
+        );
     }
 
     public AuthResponse login(AuthRequest request) {
-        User user = userRepository.findByUsername(request.getUsername())
+        User user = userRepository.findByEmail(request.getEmail().trim())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("Invalid username or password");
+            throw new IllegalArgumentException("Invalid email or password");
         }
 
         String token = jwtUtil.generateToken(user);
-        return new AuthResponse("Login successful", user.getUsername(), token);
+        return new AuthResponse(
+                "Login successful",
+                user.getProfileUsername(),
+                user.getEmail(),
+                token
+        );
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+        return userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + username));
     }
 }

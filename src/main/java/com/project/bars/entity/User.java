@@ -19,6 +19,7 @@ public class User implements UserDetails {
     @Indexed(unique = true)
     private String username;
 
+    @Indexed(unique = true)
     private String email;
 
     private String password;
@@ -49,11 +50,6 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
     public void setUsername(String username) {
         this.username = username;
     }
@@ -64,6 +60,15 @@ public class User implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    public String getProfileUsername() {
+        return username;
     }
 
     @Override

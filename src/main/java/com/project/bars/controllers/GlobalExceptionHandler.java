@@ -16,7 +16,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DuplicateKeyException.class)
     public ResponseEntity<Map<String, String>> handleDuplicateKey(DuplicateKeyException ex) {
-        return ResponseEntity.badRequest().body(Map.of("error", "Username is already taken"));
+        return ResponseEntity.badRequest().body(Map.of("error", "Username or email already exists"));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
