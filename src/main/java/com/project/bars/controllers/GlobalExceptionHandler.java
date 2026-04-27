@@ -24,6 +24,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<Map<String, String>> handleIllegalState(IllegalStateException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(Map.of("error", ex.getMessage()));
+    }
+
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleUserNotFound(UsernameNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", ex.getMessage()));
