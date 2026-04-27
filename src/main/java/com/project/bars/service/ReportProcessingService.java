@@ -34,15 +34,15 @@ public class ReportProcessingService {
         try {
             Map<String, Object> uploadResult = cloudinaryStorageService.uploadPdf(file);
             Map<String, Object> analysisResult = pythonAnalysisService.processPdf(file.getOriginalFilename(), file.getBytes());
+            Map<String, Object> cloud = new LinkedHashMap<>();
+            cloud.put("public_id", uploadResult.get("public_id"));
+            cloud.put("asset_id", uploadResult.get("asset_id"));
+            cloud.put("secure_url", uploadResult.get("secure_url"));
+            cloud.put("format", uploadResult.get("format"));
+            cloud.put("resource_type", uploadResult.get("resource_type"));
 
             Map<String, Object> response = new LinkedHashMap<>(analysisResult);
-            response.put("cloud", Map.of(
-                    "public_id", uploadResult.get("public_id"),
-                    "asset_id", uploadResult.get("asset_id"),
-                    "secure_url", uploadResult.get("secure_url"),
-                    "format", uploadResult.get("format"),
-                    "resource_type", uploadResult.get("resource_type")
-            ));
+            response.put("cloud", cloud);
             return response;
         } catch (Exception exception) {
             throw new IllegalStateException("Backend report processing failed.", exception);

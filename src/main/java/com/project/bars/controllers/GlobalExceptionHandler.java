@@ -47,4 +47,10 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.badRequest().body(body);
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, String>> handleUnexpected(Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", ex.getMessage() == null ? "Unexpected server error" : ex.getMessage()));
+    }
 }
