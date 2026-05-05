@@ -1,0 +1,30 @@
+# ── Git / IDE ──────────────────────────────────────────────────────
+.git
+.gitignore
+.gitattributes
+.idea
+*.iml
+
+# ── Maven build output ─────────────────────────────────────────────
+target/
+
+# ── Maven wrapper cache (not needed inside the image) ─────────────
+.mvn/repository
+
+# ── OS / editor noise ─────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# ── Codex fix marker files ─────────────────────────────────────────
+.codex-*
+
+# ── Local environment files (NEVER bake secrets into the image) ────
+.env
+.env.*
+!.env.example
+
+# ── Logs ──────────────────────────────────────────────────────────
+*.log
+logs/
